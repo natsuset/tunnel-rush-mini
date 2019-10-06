@@ -12,11 +12,9 @@
 
 %token Func_Definition OPEN_PARAN CLOSE_PARAN COLON OPEN_BRACE CLOSE_BRACE SEMI_COLON COMMA FOR WHILE OPEN_SQ_BRACE CLOSE_SQ_BRACE BREAK IF ELSEIF ELSE CONTINUE
 
-%left ADD SUB
-%left MUL DIV MOD
-%precedence NEG
-%left LTEQ GTEQ LT GT EQ NEQ AND OR
 %right NOT
+%left ADD SUB LTEQ GTEQ LT GT EQ NEQ AND OR MUL DIV MOD
+%precedence NEG
 
 %union
 {
@@ -24,22 +22,17 @@
     class ASTNode *node;
 }
 
-%token <node> INT_LIT
-%token <node> CHAR_LIT
-%token <node> VAR_NAME READ WRITE PRINT SCAN
-%token <node> TRUE
-%token <node> FALSE
+%token <node> INT_LIT CHAR_LIT VAR_NAME READ WRITE PRINT SCAN TRUE FALSE
 %token <val> INT BOOL CHAR ASSIGN_OP OPEN_BRACE CLOSE_BRACE NEQ EEQ LT GT LTOE GTOE ADD SUB MUL DIV MOD AND OR NOT QUE_MARK RETURN MAINFUNC_NAME END
 
-%type <node> File Global_Decls Global_Declaration Global_Declaration_define Global_Declaration_use Initializer
-%type <node> Body Function_list Main_function Function Arguments Statement_List Statement Var_Dec END_STATEMENT Dec_Types EndingDec
-%type <node> FOR_LOOP WHILE_LOOP PRINTABLE PRINTABLE_LIST Expr Elif_Block Else_BLOCK TernaryOp MethodCall Literal ParamList Location MAINRETURN_Statement
+%type <node> File Global_Decls Global_Declaration Global_Declaration_define Global_Declaration_use Initializer Body Function_list Main_function Function Arguments Statement_List Statement Var_Dec
+%type <node> FOR_LOOP WHILE_LOOP PRINTABLE PRINTABLE_LIST Expr Elif_Block Else_BLOCK TernaryOp MethodCall Literal ParamList Location MAINRETURN_Statement END_STATEMENT Dec_Types EndingDec
 %type <node> IF_Stmnt IF_ELSE_STMNTS Var_Declaration LOOPS BREAK_STMNT CONTINUE_STMNT IO_STMNT FILE_IO_STMNT PRINT_STMNT FUNC_CALL_STMNT RETURN_Statement epsilon Literal_LIST VAR_LIST
 %type <val> COMMA BREAK CONTINUE VAR_TYPE SEMI_COLON Opers Bins
 
 %%
 
-BigNode : File { cout << endl << "AST Starts" << endl; $1->visit();}
+ENTER : File { cout << endl << "AST Starts" << endl; $1->visit();}
         ;
 
 File: Statement_List Body {$$ = new CompleteFileNodeWithGlobal($1, $2); cout << "File with Global";}
